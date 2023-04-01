@@ -62,12 +62,20 @@ export default {
   methods: {
     // 搜索按钮的回调函数，向search路由进行跳转
     goSearch() {
-      this.$router.push({
-        name: "search",
-        params: {
-          keyword: this.keyword,
+      this.$router.push(
+        {
+          name: "search",
+          params: {
+            keyword: this.keyword || undefined,
+          },
         },
-      });
+        (success) => {
+          // console.log(success);
+        },
+        (error) => {
+          // console.log(error);
+        }
+      );
     },
   },
 };
