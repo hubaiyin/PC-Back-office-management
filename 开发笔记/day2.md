@@ -103,6 +103,23 @@ axios基础不好可以参考git|NPM关于axios文档
 
 协议、域名、端口号不同的请求，称之为跨域
 
+##### 前端解决方法：
+
+在vue.config.js中
+
+```js
+// 代理跨域
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://gmall-h5-api.atguigu.cn',
+      }
+    }
+  }
+```
+
+
+
 #### nprogress进度条的使用
 
 start：进度条开始

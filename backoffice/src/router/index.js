@@ -21,7 +21,7 @@ const router = new VueRouter({
         },
         {
             name: 'search',
-            path: '/search/:categoryName?/:categoryId?',
+            path: '/search/:keyword?',
             component: () => import('@/pages/Search'),
             meta: { isShow: true },
         },

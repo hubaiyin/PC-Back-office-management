@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import router from '@/router/'
 import App from './App.vue'
 import store from '@/store'
+import '@/mock/mockServe'
 
 // 三级联动组件---全局组件
 import TypeNav from '@/components/TypeNav'

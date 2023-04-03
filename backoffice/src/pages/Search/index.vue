@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>params参数----{{ $route.params.categoryName }}</h1>
+    <TypeNav />
   </div>
 </template>
 <script>

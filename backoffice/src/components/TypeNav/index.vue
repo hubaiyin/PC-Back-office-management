@@ -2,59 +2,61 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="leaveIndex()">
+      <div @mouseleave="leaveIndex()" @mouseenter="enterShow">
         <h2 class="all">全部商品分类</h2>
         <!-- 三级联动 -->
-        <div class="sort">
-          <div class="all-sort-list2">
-            <div
-              class="item"
-              v-for="(c1, index) in categoryList"
-              :key="c1.categoryId"
-              :class="{ cur: currentIndex == index }"
-              @click="goSearch($event)"
-            >
-              <h3 @mouseenter="changeIndex(index)">
-                <a
-                  :data-categoryName="c1.categoryName"
-                  :data-categoryId="c1.categoryId"
-                  >{{ c1.categoryName }}</a
-                >
-              </h3>
-              <!-- 二级分类 -->
-              <div class="item-list clearfix" v-show="currentIndex == index">
-                <div
-                  class="subitem"
-                  v-for="(c2, index) in c1.categoryChild"
-                  :key="c2.categoryId"
-                >
-                  <dl class="fore">
-                    <dt>
-                      <a
-                        :data-categoryName="c2.categoryName"
-                        :data-categoryId="c2.categoryId"
-                        >{{ c2.categoryName }}</a
-                      >
-                    </dt>
-                    <!-- 三级分类 -->
-                    <dd>
-                      <em
-                        v-for="(c3, index) in c2.categoryChild"
-                        :key="c3.categoryId"
-                      >
+        <transition name="sort">
+          <div class="sort" v-show="isShow">
+            <div class="all-sort-list2">
+              <div
+                class="item"
+                v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
+                :class="{ cur: currentIndex == index }"
+                @click="goSearch($event)"
+              >
+                <h3 @mouseenter="changeIndex(index)">
+                  <a
+                    :data-categoryName="c1.categoryName"
+                    :data-categoryId="c1.categoryId"
+                    >{{ c1.categoryName }}</a
+                  >
+                </h3>
+                <!-- 二级分类 -->
+                <div class="item-list clearfix" v-show="currentIndex == index">
+                  <div
+                    class="subitem"
+                    v-for="(c2, index) in c1.categoryChild"
+                    :key="c2.categoryId"
+                  >
+                    <dl class="fore">
+                      <dt>
                         <a
-                          :data-categoryName="c3.categoryName"
-                          :data-categoryId="c3.categoryId"
-                          >{{ c3.categoryName }}</a
+                          :data-categoryName="c2.categoryName"
+                          :data-categoryId="c2.categoryId"
+                          >{{ c2.categoryName }}</a
                         >
-                      </em>
-                    </dd>
-                  </dl>
+                      </dt>
+                      <!-- 三级分类 -->
+                      <dd>
+                        <em
+                          v-for="(c3, index) in c2.categoryChild"
+                          :key="c3.categoryId"
+                        >
+                          <a
+                            :data-categoryName="c3.categoryName"
+                            :data-categoryId="c3.categoryId"
+                            >{{ c3.categoryName }}</a
+                          >
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -80,6 +82,7 @@ export default {
     return {
       // 存储用户鼠标以上哪一个一级分类
       currentIndex: -1,
+      isShow: true,
     };
   },
   methods: {
@@ -89,6 +92,9 @@ export default {
     }, 50),
     leaveIndex() {
       this.currentIndex = -1;
+      if (this.$route.path != "/home") {
+        this.isShow = false;
+      }
     },
     goSearch(event) {
       let element = event.target;
@@ -98,17 +104,25 @@ export default {
       console.log(element.dataset);
       if (categoryname) {
         let location = { name: "search" };
-        let params = { categoryName: categoryname };
-        params.categoryId = categoryid;
-        location.params = params;
-        console.log(location);
+        let query = { categoryName: categoryname };
+        query.categoryId = categoryid;
+        // console.log(location);
+        // 判断：如果路由跳转的时候，带有params参数，要捎带过去
+        location.params = this.$route.params;
+        location.query = query;
         this.$router.push(location);
       }
     },
+    // 当鼠标移入时，让商品列表显示
+    enterShow() {
+      this.isShow = true;
+    },
   },
   mounted() {
-    // 通知vuex发送请求，获取数据，存储于仓库中
-    this.$store.dispatch("categoryList");
+    // 如果不是home路由组件，那么就隐藏typeav
+    if (this.$route.path != "/home") {
+      this.isShow = false;
+    }
   },
   computed: {
     ...mapState({
@@ -159,6 +173,7 @@ export default {
       position: absolute;
       background: #fafafa;
       z-index: 999;
+      overflow: hidden;
 
       .all-sort-list2 {
         .item {
@@ -240,6 +255,25 @@ export default {
           background: skyblue;
         }
       }
+    }
+    // 过渡动画样式
+    .sort-enter {
+      height: 0px;
+    }
+    .sort-enter-to {
+      height: 461px;
+    }
+    .sort-enter-active {
+      transition: all 0.5s linear;
+    }
+    .sort-leave {
+      height: 461px;
+    }
+    .sort-leave-to {
+      height: 0;
+    }
+    .sort-leave-active {
+      transition: all 0.5s linear;
     }
   }
 }

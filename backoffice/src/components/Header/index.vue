@@ -27,7 +27,7 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
-        <router-link class="logo" title="尚品汇" target="_blank" to="/home">
+        <router-link class="logo" title="尚品汇" to="/home">
           <img src="./images/logo.png" alt="" />
         </router-link>
       </h1>
@@ -62,20 +62,14 @@ export default {
   methods: {
     // 搜索按钮的回调函数，向search路由进行跳转
     goSearch() {
-      this.$router.push(
-        {
-          name: "search",
-          params: {
-            keyword: this.keyword || undefined,
-          },
+      let location = {
+        name: "search",
+        params: {
+          keyword: this.keyword || undefined,
         },
-        (success) => {
-          // console.log(success);
-        },
-        (error) => {
-          // console.log(error);
-        }
-      );
+        query: this.$route.query,
+      };
+      this.$router.push(location);
     },
   },
 };

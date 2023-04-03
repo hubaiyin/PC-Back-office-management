@@ -99,8 +99,16 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   name: "ListContainer",
+  computed: {
+    ...mapState({
+      bannerList: (state) => {
+        return state.home.bannerList;
+      },
+    }),
+  },
 };
 </script>
 <style lang="less" scoped>

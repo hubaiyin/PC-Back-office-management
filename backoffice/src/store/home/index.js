@@ -1,13 +1,18 @@
-import { reqCategoryList } from "@/api"
+import { reqCategoryList, reqGetBannerList } from "@/api"
 
 // home模块的小仓库
 const state = {
     // state中数据默认初始值别小写，【根据接口返回值初始化的】
     categoryList: [],
+    bannerList: [],
 }
 const mutations = {
     CATEGORYLIST(state, categoryList) {
         state.categoryList = categoryList;
+        // console.log(categoryList);
+    },
+    BANNERLIST(state, bannerList) {
+        state.bannerList = bannerList;
     }
 }
 const actions = {
@@ -16,6 +21,13 @@ const actions = {
         let result = await reqCategoryList();
         if (result.code === 200) {
             this.commit("CATEGORYLIST", result.data)
+        }
+    },
+
+    async getBannerList() {
+        let result = await reqGetBannerList();
+        if (result.code === 200) {
+            this.commit('BANNERLIST', result.data)
         }
     }
 }
